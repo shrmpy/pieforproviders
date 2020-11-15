@@ -1,0 +1,136 @@
+commands:
+  prepare_db:
+    description: 'Setup database'
+    steps:
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: psql client
+          command: sudo apt install -y postgresql-client
+      - run:
+          name: Database setup
+          command: |
+            cp config/database.yml.github-actions config/database.yml
+            bundle exec rake db:create
+            bundle exec rake db:structure:load --trace
+          environment:
+            RAILS_ENV: test
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            DEVISE_JWT_SECRET_KEY: imasecretkey
+  cy_deps:
+    description: 'Cypress dependencies'
+    steps:
+      - run:
+          name: Install cypress OSS dependencies
+          command: sudo apt install -y xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libgbm1
+  prepare_ruby:
+    description: 'Setup Ruby'
+    steps:
+      #- ruby/install:
+      #    version: '2.6'
+      - run: mkdir -p tmp/pids && rm -f tmp/pids/*
+      - run:
+          name: Run rails server in background
+          command: bin/rails server -e test -p 5017
+          background: true
+
+jobs:
+  frontend_tests:
+    executor:
+      name: node/default
+      tag: '12.19'
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-version: v13
+          pkg-manager: yarn
+          cache-path: ~/.cache
+          app-dir: client
+      - run: yarn --cwd client lint
+      - run: yarn --cwd client test --watchAll=false
+
+  cache_deps:
+    docker:
+      - image: cimg/ruby:2.6-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      # cache bundle
+      - node/install-packages:
+          cache-version: v13
+          pkg-manager: yarn
+          cache-path: ~/.cache
+
+  e2e:
+    executor: ruby_pg
+    steps:
+      - checkout
+      - ruby/install-deps
+      - node/install-packages:
+          cache-version: v13
+          pkg-manager: yarn
+          cache-path: ~/.cache
+      - prepare_db
+      - cy_deps
+
+      - node/install-packages:
+          cache-version: v13
+          pkg-manager: yarn
+          cache-path: ~/.cache
+          app-dir: client
+      - run:
+          name: Build client
+          command: yarn --cwd client build
+      - run:
+          name: Include client build
+          command: cp -a client/build/. public/
+      - prepare_ruby
+      - run:
+          name: Run Cypress step
+          command: 'yarn cy:run'
+
+      # clean up
+      #- run:
+      #    name: Kill test server after running Cypress
+      #    command: kill -9 $(cat tmp/pids/server.pid)
+
+
+# Declare the orbs that we'll use in our config.
+# read more about orbs: https://circleci.com/docs/2.0/using-orbs/
+orbs:
+  node: circleci/node@4.1.0
+  ruby: circleci/ruby@1.1.1
+executors:
+  ruby_pg:
+    docker:
+      - image: circleci/ruby:2.6-node # this is our primary docker image, where step commands run.
+        # environment variables specific to Ruby/Rails, applied to the primary container.
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: 127.0.0.1
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          DEVISE_JWT_SECRET_KEY: imasecretkey
+          TERM: xterm
+      - image: circleci/postgres:12-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+  cy_pg:
+    docker:
+      - image: cypress/included:5.2.0
+version: 2.1 # Use 2.1 to enable using orbs and other features.
+# We use workflows to orchestrate the jobs that we declared above.
+workflows:
+  web_tests: # The name of our workflow is "web_tests"
+    jobs:
+      - frontend_tests
+      - e2e
+
