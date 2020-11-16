@@ -71,6 +71,7 @@ jobs:
       - node/install-packages:
           cache-version: v13
           pkg-manager: yarn
+          override-ci-command: yarn install
           cache-path: ~/.cache
       - prepare_db
       - cy_deps
