@@ -89,7 +89,8 @@ jobs:
       - prepare_ruby
       - run:
           name: Run Cypress step
-          command: 'yarn cy:run'
+          command: 'yarn cy:run --spec client/src/Signup.spec.js'
+          ####command: 'yarn cy:run'
 
       # clean up
       #- run:
