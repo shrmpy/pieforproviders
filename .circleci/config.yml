@@ -44,7 +44,7 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          cache-version: v13
+          cache-version: v14
           pkg-manager: yarn
           cache-path: ~/.cache
           app-dir: client
@@ -59,7 +59,7 @@ jobs:
       - ruby/install-deps
       # cache bundle
       - node/install-packages:
-          cache-version: v13
+          cache-version: v14
           pkg-manager: yarn
           cache-path: ~/.cache
 
@@ -69,7 +69,7 @@ jobs:
       - checkout
       - ruby/install-deps
       - node/install-packages:
-          cache-version: v13
+          cache-version: v14
           pkg-manager: yarn
           override-ci-command: yarn install
           cache-path: ~/.cache
@@ -77,7 +77,7 @@ jobs:
       - cy_deps
 
       - node/install-packages:
-          cache-version: v13
+          cache-version: v14
           pkg-manager: yarn
           cache-path: ~/.cache
           app-dir: client
