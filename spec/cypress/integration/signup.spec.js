@@ -124,11 +124,12 @@ describe('Signup', () => {
 
     it('allows the user to scroll in vertical direction', () => {
       cy.viewport('iphone-4')
-//cy.get('[role="scrollbar"]').should('exist')
+
       //cy.scrollTo('bottom')
 
-      // the form has the ancestor with overflow but its scrollbar is full height, expect scroll call to fail
-      cy.get('form').scrollTo('bottom')
+      // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
+      cy.get('@root .ant-row .ant-col:second').scrollTo('bottom')
+      ////cy.get('[role="scrollbar"]').should('have.length', 2)
 
     })
   })
