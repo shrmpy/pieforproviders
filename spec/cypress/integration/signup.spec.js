@@ -121,5 +121,12 @@ describe('Signup', () => {
         }
       )
     })
+
+    it('allows the user to scroll in vertical direction', () => {
+      cy.viewport('iphone-4')
+//cy.get('[role="scrollbar"]').should('exist')
+      cy.scrollTo('bottom')
+
+    })
   })
 })
