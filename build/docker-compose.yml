@@ -1,0 +1,39 @@
+version: '3'
+services:
+  backend:
+    depends_on:
+      - db
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3001 -b '0.0.0.0'"
+    environment:
+      DB_HOST: db
+      PGPASSWORD: password
+      #      PGUSER: postgres
+    build: 
+      context: ..
+      dockerfile: build/backend.Dockerfile
+    ports:
+      - "3001:3001"
+    hostname: backend
+
+  frontend:
+    depends_on:
+      - backend
+    stdin_open: true
+    build: 
+      context: ..
+      dockerfile: build/frontend.Dockerfile
+    ports:
+      - "3000:3000"
+    hostname: frontend
+
+  db:
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+    hostname: db
+
+volumes:
+  db:
+
