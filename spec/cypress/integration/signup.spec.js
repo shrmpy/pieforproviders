@@ -128,7 +128,7 @@ describe('Signup', () => {
       //cy.scrollTo('bottom')
 
       // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
-      cy.get('@root .ant-row .ant-col:second').scrollTo('bottom')
+      cy.get('div#root .ant-row .ant-col:second').scrollTo('bottom')
       ////cy.get('[role="scrollbar"]').should('have.length', 2)
 
     })
