@@ -131,7 +131,7 @@ describe('Signup', () => {
       cy.scrollTo('bottom')
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
-      cy.get('body').its('scrollTop').should('be.gt', 0)
+      cy.get('div#root').its('scrollTop').should('be.gt', 0)
 /*      cy.get('body').find('div').its('scrollTop').should('be.gt', 0)
           .should(($p) => {
 		  // two scrollbars are on signup page
