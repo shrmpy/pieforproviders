@@ -131,7 +131,7 @@ describe('Signup', () => {
       cy.scrollTo('bottom')
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
-      const offset = cy.window().its('scrollTop')
+      const offset = cy.get('html').its('scrollTop')
 	    //todo the value expected is scrollY
 
 /*      cy.get('body').find('div').its('scrollTop').should('be.gt', 0)
