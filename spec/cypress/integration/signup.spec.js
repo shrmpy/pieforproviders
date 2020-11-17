@@ -125,11 +125,13 @@ describe('Signup', () => {
     it('allows the user to scroll in vertical direction', () => {
       cy.viewport('iphone-4')
 
-      //cy.scrollTo('bottom')
-
       // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
-      cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom')
-      ////cy.get('[role="scrollbar"]').should('have.length', 2)
+      ////cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom').should('fail')
+
+      // two scrollbars are drawn
+      cy.get('[role="scrollbar"]').should('have.length', 2)
+
+      //cy.scrollTo('bottom')
 
     })
   })
