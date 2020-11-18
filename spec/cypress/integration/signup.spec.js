@@ -132,6 +132,9 @@ describe('Signup', () => {
       cy.get('html').should('have.prop', 'scrollTop')
       //const offset = cy.get('html').its('scrollTop')
       // expected val is scrollY
+      // THEORY - is the body scroll-able?
+      cy.get('body').should('have.prop', 'scrollTop')
+      cy.get('body').its('scrollTop').should('be.gt', 0)
 
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
