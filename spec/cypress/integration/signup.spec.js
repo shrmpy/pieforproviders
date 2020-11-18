@@ -127,9 +127,11 @@ describe('Signup', () => {
       cy.scrollTo('bottom')
       cy.get('html').should('have.prop', 'scrollTop')
 
-	    // THEORY - is the body scroll-able?
-      cy.get('body').should('have.prop', 'scrollTop').and('match', /\d\d+/)
-      //const offset = cy.get('body').its('scrollTop')
+      // the body scrollTop is zero (so it isn't scroll-able)
+      ////cy.get('body').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+
+      cy.get('div#root').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+      // expect root container to not scroll, too
 
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
