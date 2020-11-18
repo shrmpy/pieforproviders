@@ -124,18 +124,17 @@ describe('Signup', () => {
 
     it('allows the user to scroll in vertical direction', () => {
       cy.viewport('iphone-4')
-
-      // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
-      ////cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom').should('fail')
-
       cy.scrollTo('bottom')
       cy.get('html').should('have.prop', 'scrollTop')
-      // THEORY - is the body scroll-able?
-      cy.get('body').should('have.prop', 'scrollTop')
-      const offset = cy.get('body').its('scrollTop')
+
+	    // THEORY - is the body scroll-able?
+      cy.get('body').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+      //const offset = cy.get('body').its('scrollTop')
 
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
+      // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
+      ////cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom').should('fail')
 
 /*      cy.get('body').find('div').its('scrollTop').should('be.gt', 0)
           .should(($p) => {
