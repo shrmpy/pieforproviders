@@ -129,10 +129,12 @@ describe('Signup', () => {
       ////cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom').should('fail')
 
       cy.scrollTo('bottom')
+      cy.get('html').should('have.prop', 'scrollTop')
+      //const offset = cy.get('html').its('scrollTop')
+      // expected val is scrollY
+
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
-      const offset = cy.get('html').its('scrollTop')
-	    //todo the value expected is scrollY
 
 /*      cy.get('body').find('div').its('scrollTop').should('be.gt', 0)
           .should(($p) => {
