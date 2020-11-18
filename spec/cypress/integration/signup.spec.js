@@ -129,9 +129,9 @@ describe('Signup', () => {
 
       // the body scrollTop is zero (so it isn't scroll-able)
       ////cy.get('body').should('have.prop', 'scrollTop').and('match', /\d\d+/)
-
-      cy.get('div#root').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+      ////cy.get('div#root').should('have.prop', 'scrollTop').and('match', /\d\d+/)
       // expect root container to not scroll, too
+      cy.get('main').should('have.prop', 'scrollTop').and('match', /\d\d+/)
 
       // two scrollbars are drawn
       //cy.get('[role="scrollbar"]').should('have.length', 2)
