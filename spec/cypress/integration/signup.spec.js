@@ -124,17 +124,34 @@ describe('Signup', () => {
 
     it('allows the user to scroll in vertical direction', () => {
       cy.viewport('iphone-4')
-      cy.scrollTo('bottom')
+      cy.scrollTo('center')
       cy.get('html').should('have.prop', 'scrollTop')
 
       // the body scrollTop is zero (so it isn't scroll-able)
       ////cy.get('body').should('have.prop', 'scrollTop').and('match', /\d\d+/)
-      ////cy.get('div#root').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+      ////cy.get('div#root').should('have.prop', 'scrollTop').and('eq', 0)
       // expect root container to not scroll, too
-      cy.get('main').should('have.prop', 'scrollTop').and('match', /\d\d+/)
+      ////cy.get('main').should('have.prop', 'scrollTop').and('eq', 0)
 
+      // THEORY - select elements with overflow: scroll / auto
+      let count = 0
+      cy.get('body')
+	.find('div')
+        .each(($el, index, $arr) => {
+	    let ovf = $el.css('overflow')
+	    let ovy = $el.css('overflow-y')
+	    if ($el.scrollTop() !== 0
+	        && ovf !== 'hidden' && ovy !== 'hidden') {
+	        count++
+	    }
+	})
+	.then(() => {
+	    expect(count).to.equal(1)
+	})
+
+      // expect count is 1 (not counting html/body bar)
       // two scrollbars are drawn
-      //cy.get('[role="scrollbar"]').should('have.length', 2)
+
       // the right-half column has overflow but its scrollbar is full height, expect scroll call to fail
       ////cy.get('div#root .ant-row .ant-col').eq(1).scrollTo('bottom').should('fail')
 
